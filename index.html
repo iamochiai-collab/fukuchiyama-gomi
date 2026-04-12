@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>福知山市ごみ分別ナビ 昭和地区2 カレンダー版</title>
+<meta name="theme-color" content="#2f855a">
+<style>
+body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Yu Gothic",sans-serif;background:#f6f8fb;color:#1f2937}
+.wrap{max-width:1040px;margin:0 auto;padding:18px}
+.hero{background:linear-gradient(135deg,#2f855a,#38a169);color:#fff;border-radius:22px;padding:22px;box-shadow:0 10px 28px rgba(0,0,0,.12)}
+.hero h1{margin:0 0 8px;font-size:1.7rem}
+.hero p{margin:4px 0;line-height:1.7}
+.card{background:#fff;border-radius:18px;padding:18px;margin-top:16px;box-shadow:0 8px 24px rgba(0,0,0,.06)}
+input{width:100%;box-sizing:border-box;padding:15px 16px;border:1px solid #d1d5db;border-radius:14px;font-size:16px}
+button{padding:14px 18px;border:none;border-radius:14px;background:#2f855a;color:#fff;font-size:16px;font-weight:700;cursor:pointer}
+button.sub{background:#e5e7eb;color:#111827}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.cat{border:1px solid #e5e7eb;border-radius:16px;padding:14px;background:#fafafa}
+.cat h3{margin:0 0 8px;font-size:1rem}
+.cat p{margin:0;line-height:1.6;font-size:.95rem}
+.result{white-space:pre-wrap;line-height:1.8}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.chip{background:#eef2ff;color:#3730a3;border:none;border-radius:999px;padding:9px 12px;cursor:pointer}
+.small{font-size:.93rem;color:#6b7280}
+.notice{background:#eff6ff;border:1px solid #93c5fd;border-radius:14px;padding:14px;line-height:1.8}
+.legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.tag{display:inline-block;padding:6px 10px;border-radius:999px;font-size:.85rem;font-weight:700}
+.t-burn{background:#fee2e2;color:#991b1b}
+.t-non{background:#dbeafe;color:#1d4ed8}
+.t-plastic{background:#dcfce7;color:#166534}
+.t-bottle{background:#fef3c7;color:#92400e}
+.t-can{background:#ede9fe;color:#6d28d9}
+.t-pet{background:#fce7f3;color:#be185d}
+.calendarHead{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.calendarTitle{font-size:1.2rem;font-weight:700}
+.calendarGrid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px}
+.dow{text-align:center;font-weight:700;padding:8px 0;color:#374151}
+.day{min-height:92px;border:1px solid #e5e7eb;border-radius:14px;padding:8px;background:#fff}
+.day.muted{background:#f9fafb;color:#9ca3af}
+.day.today{outline:3px solid #34d399}
+.date{font-weight:700;margin-bottom:6px}
+.event{font-size:.76rem;line-height:1.35;border-radius:8px;padding:4px 6px;margin-top:4px;font-weight:700}
+.e-burn{background:#fee2e2;color:#991b1b}
+.e-non{background:#dbeafe;color:#1d4ed8}
+.e-plastic{background:#dcfce7;color:#166534}
+.e-bottle{background:#fef3c7;color:#92400e}
+.e-can{background:#ede9fe;color:#6d28d9}
+.e-pet{background:#fce7f3;color:#be185d}
+.scheduleTable{width:100%;border-collapse:collapse;font-size:.96rem}
+.scheduleTable th,.scheduleTable td{border:1px solid #e5e7eb;padding:10px;vertical-align:top;text-align:left}
+.scheduleTable th{background:#f8fafc}
+a{color:#2563eb;text-decoration:none}
+@media (max-width:700px){
+  .calendarGrid{gap:5px}
+  .day{min-height:78px;padding:6px}
+  .event{font-size:.68rem;padding:3px 5px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="hero">
+    <h1>福知山市ごみ分別ナビ</h1>
+    <p><strong>地区設定：</strong>昭和地区2</p>
+    <p>開いた日の年月をもとに、その月の収集カレンダーを自動表示する版です。</p>
+  </div>
+
+  <div class="card">
+    <h2 style="margin-top:0;">昭和地区2の収集日まとめ</h2>
+    <div class="notice">
+      燃やすごみ：<strong>月曜日・木曜日</strong><br>
+      燃やさないごみ：<strong>第1・3火曜日</strong><br>
+      容器包装プラスチックごみ：<strong>毎週水曜日</strong><br>
+      空き瓶・蛍光管・紙パック：<strong>第1・3金曜日</strong><br>
+      空き缶・紙パック：<strong>第2・4金曜日</strong><br>
+      ペットボトル・紙パック：<strong>第2・4火曜日</strong>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="calendarHead">
+      <div class="calendarTitle" id="calendarTitle">収集カレンダー</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="sub" onclick="changeMonth(-1)">前の月</button>
+        <button class="sub" onclick="goToday()">今月</button>
+        <button class="sub" onclick="changeMonth(1)">次の月</button>
+      </div>
+    </div>
+    <div class="legend">
+      <span class="tag t-burn">燃やすごみ</span>
+      <span class="tag t-non">燃やさないごみ</span>
+      <span class="tag t-plastic">容器包装プラ</span>
+      <span class="tag t-bottle">びん・蛍光管・紙パック</span>
+      <span class="tag t-can">缶・紙パック</span>
+      <span class="tag t-pet">ペットボトル・紙パック</span>
+    </div>
+    <div class="calendarGrid" id="calendarGrid"></div>
+  </div>
+
+  <div class="card">
+    <h2 style="margin-top:0;">ごみ区分の早見表</h2>
+    <table class="scheduleTable">
+      <tr><th>区分</th><th>昭和地区2の出す日</th><th>例</th></tr>
+      <tr><td>燃やすごみ</td><td>毎週 月曜日・木曜日</td><td>生ごみ、紙くず、下着・肌着・靴下</td></tr>
+      <tr><td>燃やさないごみ</td><td>第1・3火曜日</td><td>歯ブラシ、ストロー、フライパン、CD、乾電池</td></tr>
+      <tr><td>容器包装プラスチック</td><td>毎週 水曜日</td><td>トレー、弁当容器、レジ袋、キャップ、ラベル</td></tr>
+      <tr><td>空き瓶・蛍光管・紙パック</td><td>第1・3金曜日</td><td>茶びん、無色びん、その他色びん、蛍光管、紙パック</td></tr>
+      <tr><td>空き缶・紙パック</td><td>第2・4金曜日</td><td>空き缶、スプレー缶、カセットボンベ、紙パック</td></tr>
+      <tr><td>ペットボトル・紙パック</td><td>第2・4火曜日</td><td>ペットボトル、紙パック</td></tr>
+      <tr><td>紙類・衣類</td><td>燃やすごみの日（月・木）に別出し</td><td>新聞紙、雑誌、雑紙、紙箱類、ダンボール、衣類</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2 style="margin-top:0;">品目を検索</h2>
+    <input id="q" type="text" placeholder="例：お菓子の箱、茶色のびん、歯ブラシ、アルミホイル">
+    <div class="chips">
+      <button class="chip" onclick="quick('お菓子の箱')">お菓子の箱</button>
+      <button class="chip" onclick="quick('じゃがりこの箱')">じゃがりこの箱</button>
+      <button class="chip" onclick="quick('茶色のびん')">茶色のびん</button>
+      <button class="chip" onclick="quick('びん')">びん</button>
+      <button class="chip" onclick="quick('歯ブラシ')">歯ブラシ</button>
+      <button class="chip" onclick="quick('ペットボトル')">ペットボトル</button>
+      <button class="chip" onclick="quick('乾電池')">乾電池</button>
+      <button class="chip" onclick="quick('紙パック')">紙パック</button>
+    </div>
+    <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap">
+      <button onclick="searchItem()">調べる</button>
+      <button class="sub" onclick="resetView()">リセット</button>
+    </div>
+    <p class="small">AIは使っていないので、PDFのルールと候補語で近いものを返すしくみです。</p>
+  </div>
+
+  <div class="card">
+    <div id="result" class="result">ここに結果が出るよ。</div>
+  </div>
+
+  <div class="card">
+    <p class="small">元資料：福知山市「家庭ごみの正しい分け方・出し方」PDF</p>
+    <a href="https://www.city.fukuchiyama.lg.jp/uploaded/attachment/41597.pdf" target="_blank" rel="noopener">公式PDFを開く</a>
+  </div>
+</div>
+
+<script>
+const DATA = [{"label": "お菓子の箱", "category": "紙類（雑誌・雑紙・紙箱類）", "schedule": "燃やすごみの日（月・木）に、指定袋に入れずに出す紙類の候補", "how": "中身を空にして、紙だけなら紙類へ。フィルムやプラ部分があれば分ける。", "keywords": ["お菓子の箱", "菓子箱", "おかしの箱", "じゃがりこの箱", "ポッキーの箱", "チョコの箱", "紙箱", "箱"]}, {"label": "茶色のびん", "category": "資源ごみ（茶びん）", "schedule": "第1・3金曜日（空きびん・蛍光管・紙パック）", "how": "中身を空にして軽くすすぎ、茶色のびんの区分へ。", "keywords": ["茶色のびん", "茶びん", "茶色びん", "茶色瓶", "ビールびん"]}, {"label": "透明のびん", "category": "資源ごみ（無色びん）", "schedule": "第1・3金曜日（空きびん・蛍光管・紙パック）", "how": "中身を空にして軽くすすぎ、無色びんへ。", "keywords": ["透明のびん", "無色びん", "透明びん", "透明瓶"]}, {"label": "その他の色のびん", "category": "資源ごみ（その他の色びん）", "schedule": "第1・3金曜日（空きびん・蛍光管・紙パック）", "how": "中身を空にして軽くすすぎ、その他の色びんへ。", "keywords": ["緑のびん", "青いびん", "色つきびん", "ワインボトル"]}, {"label": "ペットボトル", "category": "資源ごみ（ペットボトル）", "schedule": "第2・4火曜日（ペットボトル・紙パック）", "how": "中身を空にして軽くすすぐ。本体とキャップ・ラベルは分ける。", "keywords": ["ペットボトル", "PETボトル", "飲料ボトル"]}, {"label": "ペットボトルのキャップ", "category": "容器包装プラスチック", "schedule": "毎週水曜日", "how": "プラマークのある容器・包装として出す候補。", "keywords": ["キャップ", "ペットボトルのキャップ", "ボトルキャップ"]}, {"label": "ペットボトルのラベル", "category": "容器包装プラスチック", "schedule": "毎週水曜日", "how": "はがして容器包装プラスチックへ。", "keywords": ["ラベル", "ペットボトルのラベル"]}, {"label": "食品トレー", "category": "容器包装プラスチック", "schedule": "毎週水曜日", "how": "軽く洗って、プラマークがあれば容器包装プラスチックへ。", "keywords": ["トレー", "食品トレー", "惣菜トレー", "発泡トレー"]}, {"label": "弁当容器", "category": "容器包装プラスチック", "schedule": "毎週水曜日", "how": "軽く洗って出す。", "keywords": ["弁当容器", "惣菜容器", "豆腐パック", "プリン容器", "ヨーグルト容器", "カップ麺容器"]}, {"label": "レジ袋・菓子袋", "category": "容器包装プラスチック", "schedule": "毎週水曜日", "how": "プラマークのある袋の候補。", "keywords": ["レジ袋", "プラ袋", "ビニール袋", "お菓子の袋", "菓子の袋", "スナックの袋"]}, {"label": "歯ブラシ", "category": "燃やさないごみ", "schedule": "第1・3火曜日", "how": "容器包装プラスチックではなく、プラスチック製品そのものとして燃やさないごみの候補。", "keywords": ["歯ブラシ", "はぶらし"]}, {"label": "ストロー", "category": "燃やさないごみ", "schedule": "第1・3火曜日", "how": "容器包装プラスチックの対象外として燃やさないごみの候補。", "keywords": ["ストロー", "マドラー"]}, {"label": "ハンガー", "category": "燃やさないごみ", "schedule": "第1・3火曜日", "how": "プラスチック製品そのものとして燃やさないごみの候補。", "keywords": ["ハンガー"]}, {"label": "CD・DVD", "category": "燃やさないごみ", "schedule": "第1・3火曜日", "how": "燃やさないごみの例。", "keywords": ["CD", "DVD", "ブルーレイ", "ディスク"]}, {"label": "スプーン", "category": "燃やさないごみ", "schedule": "第1・3火曜日", "how": "金属類として燃やさないごみの候補。", "keywords": ["スプーン"]}, {"label": "フライパン", "category": "燃やさないごみ", "schedule": "第1・3火曜日", "how": "金属類として燃やさないごみの候補。", "keywords": ["フライパン", "鍋", "なべ", "やかん"]}, {"label": "アルミホイル", "category": "燃やさないごみ", "schedule": "第1・3火曜日", "how": "金属類として燃やさないごみの候補。", "keywords": ["アルミホイル", "ホイル"]}, {"label": "乾電池", "category": "燃やさないごみ（透明袋で別出し）", "schedule": "第1・3火曜日", "how": "乾電池のみ透明袋に入れて出す。", "keywords": ["乾電池", "電池", "単三電池", "単四電池", "ボタン電池"]}, {"label": "蛍光管", "category": "資源ごみ（蛍光管）", "schedule": "第1・3金曜日（空きびん・蛍光管・紙パック）", "how": "購入時の箱や新聞紙で包んで出す。", "keywords": ["蛍光管", "蛍光灯"]}, {"label": "空き缶", "category": "資源ごみ（空き缶）", "schedule": "第2・4金曜日（空き缶・紙パック）", "how": "中身を空にして洗い、つぶさずに出す。スプレー缶等は使い切る。", "keywords": ["空き缶", "缶", "アルミ缶", "スチール缶", "スプレー缶", "カセットボンベ"]}, {"label": "生ごみ", "category": "燃やすごみ", "schedule": "毎週 月曜日・木曜日", "how": "水をよく切って指定袋へ。", "keywords": ["生ごみ", "台所ごみ", "食べ残し", "野菜くず"]}, {"label": "下着・肌着・靴下", "category": "燃やすごみ", "schedule": "毎週 月曜日・木曜日", "how": "衣類としてではなく燃やすごみ。", "keywords": ["下着", "肌着", "靴下", "くつした", "パンツ"]}, {"label": "衣類", "category": "指定袋に入れずに出すもの（衣類）", "schedule": "燃やすごみの日（月・木）", "how": "下着・肌着・靴下等は対象外。", "keywords": ["衣類", "服", "シャツ", "ズボン", "上着"]}, {"label": "新聞紙", "category": "紙類（新聞紙）", "schedule": "燃やすごみの日（月・木）", "how": "新聞紙のみをひもでしばって出す。", "keywords": ["新聞", "新聞紙", "チラシ"]}, {"label": "雑誌・雑紙・紙箱類", "category": "紙類（雑誌・雑紙・紙箱類）", "schedule": "燃やすごみの日（月・木）", "how": "雑誌、紙箱、紙袋などをまとめる。", "keywords": ["雑誌", "雑紙", "紙箱類", "紙袋", "ノート", "雑がみ"]}, {"label": "ダンボール", "category": "紙類（ダンボール）", "schedule": "燃やすごみの日（月・木）", "how": "ダンボールのみをひもでしばって出す。", "keywords": ["ダンボール", "段ボール", "段ボール箱"]}, {"label": "紙パック", "category": "資源ごみ（紙パック）", "schedule": "第1・3金曜日 / 第2・4金曜日 / 第2・4火曜日", "how": "洗って開いて乾かしてから出すと分かりやすい。", "keywords": ["紙パック", "牛乳パック", "ミルクパック"]}, {"label": "注射針", "category": "市では収集できない", "schedule": "-", "how": "受け取った医療機関や薬局へ返却。", "keywords": ["注射針", "針"]}];
+const JP_MONTHS = ["1月","2月","3月","4月","5月","6月","7月","8月","9月","10月","11月","12月"];
+let viewDate = new Date();
+
+function normalize(t){
+  return (t||"").toLowerCase().replace(/\s+/g,"").replace(/[　]/g,"").replace(/[（）()・･]/g,"");
+}
+
+function formatItem(item, extra=""){
+  return `分別候補：\n${item.category}\n\n昭和地区2の出す日：\n${item.schedule}\n\n出し方のポイント：\n${item.how}${extra ? "\n\n補足：\n"+extra : ""}`;
+}
+
+function inferRule(raw){
+  const q = normalize(raw);
+  if ((q.includes("箱") || q.includes("はこ")) && (q.includes("お菓子") || q.includes("菓子") || q.includes("じゃがりこ") || q.includes("チョコ") || q.includes("スナック"))) {
+    return formatItem(DATA.find(x=>x.label==="お菓子の箱"),"たとえば『じゃがりこの箱』みたいな言い方でも、この候補で考えられるよ。");
+  }
+  if ((q.includes("茶") || q.includes("ちゃ")) && (q.includes("びん") || q.includes("瓶"))) {
+    return formatItem(DATA.find(x=>x.label==="茶色のびん"));
+  }
+  if ((q.includes("透明") || q.includes("無色")) && (q.includes("びん") || q.includes("瓶"))) {
+    return formatItem(DATA.find(x=>x.label==="透明のびん"));
+  }
+  if (q.includes("びん") || q.includes("瓶")) {
+    return "びんは色で分けるよ。\n\n・透明なら → 第1・3金曜日の無色びん\n・茶色なら → 第1・3金曜日の茶びん\n・それ以外の色なら → 第1・3金曜日のその他の色びん\n\n乳白色びんは燃やさないごみの案内。";
+  }
+  if (q.includes("箱")) {
+    return "箱は素材で分かれるよ。\n\n・紙の箱なら → 紙類（雑誌・雑紙・紙箱類）\n・フィルムやプラのふたがあれば → 分けて出す\n\n紙類は燃やすごみの日（月・木）に別出し。";
+  }
+  return "近い候補が見つからなかったよ。\n\n短い言葉でも試してみてね。例：箱、びん、袋、ボトル、電池";
+}
+
+function scoreItem(item, qn){
+  let best = 0;
+  for(const kw of item.keywords){
+    const kn = normalize(kw);
+    if(qn === kn) best = Math.max(best, 120);
+    else if(qn.includes(kn) || kn.includes(qn)) best = Math.max(best, 90);
+    else {
+      let hit = 0;
+      const parts = kn.match(/[ぁ-んァ-ヶ一-龠a-z0-9]+/g) || [];
+      for(const p of [...new Set(parts)]) if(qn.includes(p)) hit++;
+      best = Math.max(best, hit);
+    }
+  }
+  return best;
+}
+
+function searchItem(){
+  const q = document.getElementById('q').value.trim();
+  const result = document.getElementById('result');
+  if(!q){ result.textContent = "品目名を入れてね。"; return; }
+  const qn = normalize(q);
+  let best = null, bestScore = 0;
+  for(const item of DATA){
+    const s = scoreItem(item, qn);
+    if(s > bestScore) { best = item; bestScore = s; }
+  }
+  if(best && bestScore >= 8) result.textContent = formatItem(best);
+  else result.textContent = inferRule(q);
+}
+
+function quick(text){ document.getElementById('q').value = text; searchItem(); }
+function resetView(){ document.getElementById('q').value=''; document.getElementById('result').textContent='ここに結果が出るよ。'; }
+
+function nthWeekdayOfMonth(day) {
+  return Math.floor((day - 1) / 7) + 1;
+}
+
+function eventsForDate(year, monthIndex, day) {
+  const d = new Date(year, monthIndex, day);
+  const weekday = d.getDay(); // 0 Sun ... 6 Sat
+  const nth = nthWeekdayOfMonth(day);
+  const events = [];
+
+  if (weekday === 1 || weekday === 4) {
+    events.push({label:"燃やす", cls:"e-burn"});
+  }
+  if (weekday === 2 && (nth === 1 || nth === 3)) {
+    events.push({label:"燃やさない", cls:"e-non"});
+  }
+  if (weekday === 3) {
+    events.push({label:"容器包装プラ", cls:"e-plastic"});
+  }
+  if (weekday === 5 && (nth === 1 || nth === 3)) {
+    events.push({label:"びん・蛍光管・紙パック", cls:"e-bottle"});
+  }
+  if (weekday === 5 && (nth === 2 || nth === 4)) {
+    events.push({label:"缶・紙パック", cls:"e-can"});
+  }
+  if (weekday === 2 && (nth === 2 || nth === 4)) {
+    events.push({label:"ペット・紙パック", cls:"e-pet"});
+  }
+
+  return events;
+}
+
+function renderCalendar() {
+  const grid = document.getElementById('calendarGrid');
+  const title = document.getElementById('calendarTitle');
+  const year = viewDate.getFullYear();
+  const month = viewDate.getMonth();
+  title.textContent = `${year}年${JP_MONTHS[month]} の収集カレンダー`;
+
+  grid.innerHTML = "";
+  const dows = ["日","月","火","水","木","金","土"];
+  for (const dow of dows) {
+    const el = document.createElement('div');
+    el.className = 'dow';
+    el.textContent = dow;
+    grid.appendChild(el);
+  }
+
+  const firstDay = new Date(year, month, 1).getDay();
+  const lastDate = new Date(year, month + 1, 0).getDate();
+  const today = new Date();
+
+  for (let i = 0; i < firstDay; i++) {
+    const cell = document.createElement('div');
+    cell.className = 'day muted';
+    grid.appendChild(cell);
+  }
+
+  for (let day = 1; day <= lastDate; day++) {
+    const cell = document.createElement('div');
+    cell.className = 'day';
+    if (
+      today.getFullYear() === year &&
+      today.getMonth() === month &&
+      today.getDate() === day
+    ) {
+      cell.classList.add('today');
+    }
+
+    const dateEl = document.createElement('div');
+    dateEl.className = 'date';
+    dateEl.textContent = day;
+    cell.appendChild(dateEl);
+
+    const events = eventsForDate(year, month, day);
+    for (const ev of events) {
+      const tag = document.createElement('div');
+      tag.className = `event ${ev.cls}`;
+      tag.textContent = ev.label;
+      cell.appendChild(tag);
+    }
+
+    grid.appendChild(cell);
+  }
+}
+
+function changeMonth(offset) {
+  viewDate = new Date(viewDate.getFullYear(), viewDate.getMonth() + offset, 1);
+  renderCalendar();
+}
+
+function goToday() {
+  viewDate = new Date();
+  renderCalendar();
+}
+
+renderCalendar();
+</script>
+</body>
+</html>
