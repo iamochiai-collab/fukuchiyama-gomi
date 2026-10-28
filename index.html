@@ -31,6 +31,7 @@
   --c-can:#7546b8;
   --c-pet:#c23f78;
   --c-none:#9aa59f;
+  --c-out:#4d6270;
   --radius-l:20px;
   --radius-s:12px;
   color-scheme:light;
@@ -51,6 +52,7 @@
     --c-can:#9a6fdb;
     --c-pet:#dc5f95;
     --c-none:#5d6a63;
+    --c-out:#8ea3b0;
     color-scheme:dark;
   }
 }
@@ -90,6 +92,7 @@ a{color:var(--brand)}
 [data-k=bottle]{--c:var(--c-bottle)}
 [data-k=can]{--c:var(--c-can)}
 [data-k=pet]{--c:var(--c-pet)}
+[data-k=park],[data-k=kaden],[data-k=pc],[data-k=sodai],[data-k=ret]{--c:var(--c-out)}
 
 /* いちばん上：今日・明日 */
 .hero{
@@ -144,20 +147,47 @@ h2{font-size:1.15rem;margin:0 0 10px;padding-left:2px}
 }
 .searchbox input:focus{border-color:var(--brand);outline:none}
 .searchbox svg{position:absolute;left:15px;top:50%;transform:translateY(-50%);width:20px;height:20px;color:var(--ink-2)}
-.chips{display:flex;gap:8px;overflow-x:auto;padding:10px 2px 4px;scrollbar-width:none}
+#sBody{margin-top:10px;display:grid;gap:10px}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 4px;scrollbar-width:none}
+.chips.wrap{flex-wrap:wrap;overflow:visible}
 .chips::-webkit-scrollbar{display:none}
 .chip{flex:none;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:7px 13px;font-size:.9rem;cursor:pointer}
 .chip:hover{border-color:var(--ink-2)}
-.results{margin-top:10px;display:grid;gap:10px}
+.sub{font-size:.9rem;color:var(--ink-2);margin:8px 2px 0;font-weight:700}
+.groups{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+@media (min-width:600px){.groups{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.gbtn{display:flex;align-items:center;gap:10px;text-align:left;padding:10px 12px;border:1px solid var(--line);border-left:5px solid var(--c);background:var(--surface);border-radius:var(--radius-s);cursor:pointer;line-height:1.35;font-size:.9rem;font-weight:700}
+.gbtn .stamp{font-size:.78rem}
+.gbtn small{display:block;color:var(--ink-2);font-size:.78rem;font-weight:400;margin-top:2px}
+.gbtn:hover,.lrow:hover{border-color:var(--ink-2)}
+.ghead{margin:-4px 0 -6px}
+.back{border:none;background:none;color:var(--brand);padding:6px 2px;cursor:pointer;font-weight:700;font-size:.95rem}
+.gtitle{display:flex;align-items:center;gap:12px;padding:4px 2px}
+.gtitle .stamp{font-size:1.15rem}
+.gtitle h3{margin:0;font-size:1.1rem}
+.gtitle p{margin:0;color:var(--ink-2);font-size:.9rem}
+.gtip{margin:0;font-size:.92rem;padding:0 2px}
+.list{display:grid;gap:6px}
+.lrow{display:flex;justify-content:space-between;align-items:center;gap:12px;width:100%;padding:11px 14px;border:1px solid var(--line);border-radius:var(--radius-s);background:var(--surface);text-align:left;cursor:pointer;font-size:.95rem}
+.lrow small{color:var(--ink-2);font-size:.8rem;text-align:right}
+.lrow.strong{border-color:var(--brand);color:var(--brand);font-weight:700}
 .res{background:var(--surface);border:1px solid var(--line);border-left:6px solid var(--c, var(--c-none));border-radius:var(--radius-s);padding:12px 14px}
 .res h3{margin:0;font-size:1.05rem}
 .res .cat{margin:2px 0 6px;font-weight:700;color:var(--c, var(--ink-2))}
 .res .day{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;margin:0 0 6px;font-size:.95rem}
 .res .day .stamp{font-size:.72rem}
+.res .rule{color:var(--ink-2);font-size:.88rem}
 .res .how{margin:0;font-size:.93rem;color:var(--ink-2)}
+.contact{margin:8px 0 0;font-size:.88rem}
 .hint{background:var(--surface);border:1px dashed var(--line);border-radius:var(--radius-s);padding:12px 14px;font-size:.95rem}
-.hint p{margin:0 0 4px}
-.hint ul{margin:4px 0 0;padding-left:1.2em}
+.hint p{margin:0}
+.hint p+p{margin-top:6px}
+.guide{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-s);padding:12px 14px}
+.guide h3{margin:0 0 4px;font-size:1.05rem}
+.guide .g{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:start;padding:10px 0;border-top:1px solid var(--line)}
+.guide .g .stamp{font-size:.8rem;margin-top:2px}
+.guide .g p{margin:0;font-size:.92rem}
+.guide .g small{color:var(--c);font-weight:700;font-size:.82rem}
 
 /* カレンダー */
 .cal{padding:14px 12px 12px}
@@ -234,21 +264,21 @@ footer p{margin:0 0 6px}
     <div id="hero" class="hero" aria-live="polite"></div>
     <div id="fyNotice" class="notice" hidden></div>
 
-    <section id="next" aria-labelledby="next-h">
-      <h2 id="next-h">次の収集日</h2>
-      <ul class="next panel" id="nextList"></ul>
-    </section>
-
     <section id="search" aria-labelledby="search-h">
       <h2 id="search-h">これは何ごみ？</h2>
       <div class="searchbox">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M20 20l-4.6-4.6"/></svg>
         <label for="q" class="sr">品目名で検索</label>
-        <input id="q" type="search" enterkeyhint="search" autocomplete="off" placeholder="例：歯ブラシ、お菓子の箱、電池">
+        <input id="q" type="search" enterkeyhint="search" autocomplete="off" placeholder="例：電池、お菓子の箱、ドライヤー">
       </div>
-      <div class="chips" id="chips"></div>
-      <div class="results" id="results" aria-live="polite"></div>
+      <div id="sBody" aria-live="polite"></div>
     </section>
+
+    <section id="next" aria-labelledby="next-h">
+      <h2 id="next-h">次の収集日</h2>
+      <ul class="next panel" id="nextList"></ul>
+    </section>
+
 
     <section id="calendar" aria-labelledby="cal-h">
       <h2 id="cal-h">カレンダー</h2>
@@ -342,52 +372,149 @@ const EXCEPTIONS = {
 const FY_END = "2027-03-31";
 const CUTOFF = { h:8, m:30 };
 
+/* ごみステーションに出せないものの行き先 */
+const PLACES = {
+  park:  { name:"環境パークへ", mark:"持", contact:true,
+           lead:"ごみステーションには出せません。福知山市環境パーク（字牧285番地）で処分します。" },
+  kaden: { name:"家電リサイクル", mark:"家", contact:true,
+           lead:"市では収集しません。家電リサイクル法にそって処分します（リサイクル料金が必要）。" },
+  pc:    { name:"パソコン回収", mark:"P", contact:true,
+           lead:"市の収集・環境パークでは受け付けていません。" },
+  sodai: { name:"粗大ごみ", mark:"粗", contact:true,
+           lead:"ごみステーションには出せません。市が委託する業者の収集（有料）を申し込みます。" },
+  ret:   { name:"市では収集できません", mark:"×", contact:false, lead:"" },
+};
+
 /* ============================================================
    品目データ
-   to: 出す区分（COLのキー）。紙パックのように複数の日に出せるものは複数。
+   to   : 出す区分（COLのキー）。紙パックのように複数の日に出せるものは複数。
+   place: ステーションに出せないものの行き先（PLACESのキー）
+   kw   : 検索で引っかけたい呼び方（ひらがな・カタカナは区別しない）
    ============================================================ */
 const ITEMS = [
-  { name:"お菓子の箱", cat:"紙類（雑誌・雑紙・紙箱類）", to:["burn"], how:"燃やすごみの日に、指定袋に入れずひもでしばって出す。中身を空にし、フィルムやプラの部分は外す。", kw:["お菓子の箱","おかしのはこ","菓子箱","おかしのはこ","じゃがりこの箱","ポッキーの箱","チョコの箱","紙箱","箱"] },
-  { name:"雑誌・雑紙・紙袋", cat:"紙類（雑誌・雑紙・紙箱類）", to:["burn"], how:"燃やすごみの日に、指定袋に入れずひもでしばって出す。", kw:["雑誌","ざっし","ほん","かみぶくろ","雑紙","雑がみ","紙箱類","紙袋","ノート","本","教科書"] },
-  { name:"新聞紙・チラシ", cat:"紙類（新聞紙）", to:["burn"], how:"燃やすごみの日に、新聞紙だけをひもでしばって出す。", kw:["新聞","しんぶん","ちらし","新聞紙","チラシ","広告"] },
-  { name:"ダンボール", cat:"紙類（ダンボール）", to:["burn"], how:"燃やすごみの日に、ダンボールだけをたたんでひもでしばって出す。", kw:["ダンボール","だんぼーる","段ボール","段ボール箱","だんぼーる"] },
-  { name:"衣類", cat:"衣類", to:["burn"], how:"燃やすごみの日に、指定袋に入れずに出す。下着・肌着・靴下は燃やすごみ。", kw:["衣類","いるい","ふく","ようふく","服","シャツ","ズボン","上着","セーター","スカート"] },
-  { name:"下着・肌着・靴下", cat:"燃やすごみ", to:["burn"], how:"衣類ではなく燃やすごみとして指定袋へ。", kw:["下着","したぎ","はだぎ","肌着","靴下","くつした","パンツ"] },
-  { name:"生ごみ", cat:"燃やすごみ", to:["burn"], how:"水をよく切って指定袋へ。", kw:["生ごみ","なまごみ","たべのこし","台所ごみ","食べ残し","野菜くず","残飯"] },
+  /* 燃やすごみの日 */
+  { name:"生ごみ", cat:"燃やすごみ", to:["burn"], how:"水をよく切って指定袋へ。", kw:["台所ごみ","食べ残し","残飯","野菜くず","調理くず","茶がら","コーヒーかす"] },
+  { name:"紙くず・汚れた紙", cat:"燃やすごみ", to:["burn"], how:"ティッシュや汚れた紙は資源にならないので指定袋へ。", kw:["紙くず","ティッシュ","汚れた紙","ちり紙","レシート"] },
+  { name:"下着・肌着・靴下", cat:"燃やすごみ", to:["burn"], how:"衣類ではなく燃やすごみとして指定袋へ。", kw:["下着","肌着","靴下","くつした","パンツ","ストッキング"] },
+  { name:"お菓子の箱", cat:"紙類（雑誌・雑紙・紙箱類）", to:["burn"], how:"燃やすごみの日に、指定袋に入れずひもでしばって出す。中身を空にし、フィルムやプラの部分は外す。", kw:["菓子箱","じゃがりこの箱","ポッキーの箱","チョコの箱","紙箱","箱","ティッシュの箱","ティッシュ箱"] },
+  { name:"雑誌・雑紙・紙袋", cat:"紙類（雑誌・雑紙・紙箱類）", to:["burn"], how:"燃やすごみの日に、指定袋に入れずひもでしばって出す。", kw:["雑誌","雑紙","雑がみ","紙箱類","紙袋","ノート","本","教科書","カタログ","封筒","はがき","トイレットペーパーの芯"] },
+  { name:"新聞紙・チラシ", cat:"紙類（新聞紙）", to:["burn"], how:"燃やすごみの日に、新聞紙だけをひもでしばって出す。", kw:["新聞","新聞紙","チラシ","広告","折り込み"] },
+  { name:"ダンボール", cat:"紙類（ダンボール）", to:["burn"], how:"燃やすごみの日に、たたんでダンボールだけをひもでしばって出す。", kw:["段ボール","段ボール箱","通販の箱"] },
+  { name:"衣類", cat:"衣類", to:["burn"], how:"燃やすごみの日に、指定袋に入れずに出す。下着・肌着・靴下は燃やすごみ。", kw:["服","洋服","シャツ","ズボン","上着","セーター","スカート","古着","タオル"] },
 
-  { name:"茶色のびん", cat:"空きびん（茶色）", to:["bottle"], how:"中身を空にして軽くすすぎ、茶色のびんへ。", kw:["茶色のびん","ちゃいろのびん","ちゃびん","びーるびん","茶びん","茶色びん","茶色瓶","ビールびん","ビール瓶","栄養ドリンク"] },
-  { name:"透明のびん", cat:"空きびん（無色）", to:["bottle"], how:"中身を空にして軽くすすぎ、無色のびんへ。", kw:["透明のびん","とうめいのびん","無色びん","透明びん","透明瓶","ジャムのびん"] },
-  { name:"その他の色のびん", cat:"空きびん（その他の色）", to:["bottle"], how:"中身を空にして軽くすすぎ、その他の色のびんへ。", kw:["緑のびん","みどりのびん","わいん","青いびん","色つきびん","黒いびん","ワインボトル","ワインのびん"] },
-  { name:"乳白色のびん", cat:"燃やさないごみ", to:["non"], how:"乳白色のびんは資源ごみではなく燃やさないごみ。", kw:["乳白色のびん","白いびん","乳白色"] },
-  { name:"蛍光管", cat:"蛍光管", to:["bottle"], how:"買ったときの箱か新聞紙で包んで出す。", kw:["蛍光管","けいこうかん","けいこうとう","蛍光灯"] },
+  /* 燃やさないごみの日 */
+  { name:"歯ブラシ", cat:"燃やさないごみ", to:["non"], how:"容器包装ではなくプラスチック製品そのものなので燃やさないごみ。", kw:[] },
+  { name:"ストロー・マドラー", cat:"燃やさないごみ", to:["non"], how:"容器包装プラスチックの対象外。", kw:["ストロー","マドラー"] },
+  { name:"ハンガー", cat:"燃やさないごみ", to:["non"], how:"プラスチック製品そのものなので燃やさないごみ。", kw:[] },
+  { name:"CD・DVD", cat:"燃やさないごみ", to:["non"], how:"ケースごと燃やさないごみの指定袋へ。", kw:["CD","DVD","ブルーレイ","ディスク","CDケース"] },
+  { name:"スプーン・フォーク", cat:"燃やさないごみ", to:["non"], how:"金属類として燃やさないごみ。", kw:["スプーン","フォーク","はし","ナイフ"] },
+  { name:"フライパン・鍋", cat:"燃やさないごみ", to:["non"], how:"金属類として燃やさないごみ。", kw:["フライパン","鍋","やかん","ボウル"] },
+  { name:"アルミホイル", cat:"燃やさないごみ", to:["non"], how:"金属類として燃やさないごみ。", kw:["ホイル","アルミ"] },
+  { name:"乳白色のびん", cat:"燃やさないごみ", to:["non"], how:"乳白色のびんは資源ごみではなく燃やさないごみ。", kw:["白いびん","乳白色","化粧品のびん"] },
+  { name:"乾電池", cat:"乾電池（燃やさないごみの日）", to:["non"], how:"指定袋に入れず、乾電池だけを透明の袋に入れて出す。", kw:["電池","単三電池","単四電池","単一電池","単3","単4","アルカリ電池","マンガン電池"] },
+  { name:"ライター", cat:"ライター（燃やさないごみの日）", to:["non"], how:"ガスを抜いてから、ライターだけを透明の袋に入れて出す。指定袋には入れない。", kw:["使い捨てライター","チャッカマン"] },
+  { name:"小型家電", cat:"燃やさないごみ", to:["non"], how:"電池が外せるものは外し、燃やさないごみの指定袋に入れて出す。外した電池はそれぞれの出し方で。", kw:["家電","ドライヤー","アイロン","ヘアアイロン","電気ケトル","電卓","リモコン","ラジオ","時計","目覚まし時計","ゲーム機","デジカメ","電話機","延長コード","コード"] },
 
-  { name:"空き缶", cat:"空き缶", to:["can"], how:"中身を空にして洗い、つぶさずに出す。", kw:["空き缶","あきかん","かん","缶","アルミ缶","スチール缶","缶詰","ジュースの缶"] },
-  { name:"スプレー缶・カセットボンベ", cat:"スプレー缶・カセットボンベ", to:["can"], how:"中身を使い切り、ガスを出し切ってから透明の袋にまとめて出す。", kw:["スプレー缶","すぷれーかん","かせっとぼんべ","スプレー","カセットボンベ","ガスボンベ","ヘアスプレー","殺虫剤"] },
+  /* 容器包装プラの日 */
+  { name:"ペットボトルのキャップ", cat:"容器包装プラスチック", to:["plastic"], how:"プラマークのある容器・包装として出す。", kw:["キャップ","ボトルキャップ","ふた"] },
+  { name:"ペットボトルのラベル", cat:"容器包装プラスチック", to:["plastic"], how:"はがして容器包装プラスチックへ。", kw:["ラベル"] },
+  { name:"食品トレー", cat:"容器包装プラスチック", to:["plastic"], how:"軽く洗って、プラマークがあれば容器包装プラスチックへ。", kw:["トレー","惣菜トレー","発泡トレー","発泡スチロール","肉のトレー"] },
+  { name:"弁当・食品の容器", cat:"容器包装プラスチック", to:["plastic"], how:"軽く洗って出す。", kw:["弁当容器","弁当","惣菜容器","豆腐パック","プリン容器","ヨーグルト容器","カップ麺","カップ麺容器","たまごパック","卵パック","納豆の容器","ゼリーの容器"] },
+  { name:"レジ袋・お菓子の袋", cat:"容器包装プラスチック", to:["plastic"], how:"プラマークのある袋として出す。", kw:["レジ袋","プラ袋","ビニール袋","お菓子の袋","スナックの袋","袋","パンの袋","詰め替えパック"] },
+  { name:"シャンプー・洗剤のボトル", cat:"容器包装プラスチック", to:["plastic"], how:"中身を使い切って軽くすすぎ、プラマークがあれば容器包装プラへ。", kw:["シャンプー","リンス","洗剤","洗剤のボトル","マヨネーズ","ケチャップ","ボトル"] },
+  { name:"充電式電池・モバイルバッテリー", cat:"充電式電池（容器包装プラの日）", to:["plastic"], how:"容器包装プラとは分け、中身の見える透明・半透明の袋に入れて出す。環境パークの回収BOXにも入れられる。", kw:["リチウムイオン電池","リチウム電池","モバイルバッテリー","バッテリー","充電池","ニカド電池","ニッケル水素電池","エネループ"] },
+  { name:"ボタン電池・コイン電池", cat:"ボタン電池（容器包装プラの日）", to:["plastic"], how:"充電式電池と同じく、透明・半透明の袋に入れて容器包装プラの日に別に出す。", kw:["ボタン電池","コイン電池","時計の電池","CR2032"] },
 
-  { name:"ペットボトル", cat:"ペットボトル", to:["pet"], how:"中身を空にして軽くすすぐ。キャップとラベルは外して容器包装プラへ。", kw:["ペットボトル","PETボトル","飲料ボトル"] },
-  { name:"紙パック", cat:"紙パック", to:["pet","bottle","can"], how:"洗って開いて乾かしてから。ペットボトル・びん・缶のどの日にも出せる。", kw:["紙パック","かみぱっく","ぎゅうにゅうぱっく","牛乳パック","ミルクパック","ジュースのパック"] },
+  /* ペットボトルの日 */
+  { name:"ペットボトル", cat:"ペットボトル", to:["pet"], how:"中身を空にして軽くすすぐ。キャップとラベルは外して容器包装プラへ。", kw:["PETボトル","飲料ボトル"] },
+  /* 紙パック：3つの日のどれでも */
+  { name:"紙パック", cat:"紙パック", to:["pet","bottle","can"], how:"洗って開いて乾かしてから。ペットボトル・びん・缶のどの日にも出せる。", kw:["牛乳パック","ミルクパック","ジュースのパック"] },
 
-  { name:"ペットボトルのキャップ", cat:"容器包装プラスチック", to:["plastic"], how:"プラマークのある容器・包装として出す。", kw:["キャップ","ペットボトルのキャップ","ボトルキャップ","ふた"] },
-  { name:"ペットボトルのラベル", cat:"容器包装プラスチック", to:["plastic"], how:"はがして容器包装プラスチックへ。", kw:["ラベル","ペットボトルのラベル"] },
-  { name:"食品トレー", cat:"容器包装プラスチック", to:["plastic"], how:"軽く洗って、プラマークがあれば容器包装プラスチックへ。", kw:["トレー","とれー","食品トレー","惣菜トレー","発泡トレー","発泡スチロール"] },
-  { name:"弁当・食品の容器", cat:"容器包装プラスチック", to:["plastic"], how:"軽く洗って出す。", kw:["弁当容器","べんとう","かっぷめん","弁当","惣菜容器","豆腐パック","プリン容器","ヨーグルト容器","カップ麺容器","カップ麺","たまごパック","卵パック"] },
-  { name:"レジ袋・お菓子の袋", cat:"容器包装プラスチック", to:["plastic"], how:"プラマークのある袋として出す。", kw:["レジ袋","れじぶくろ","ふくろ","びにーるぶくろ","プラ袋","ビニール袋","お菓子の袋","菓子の袋","スナックの袋","袋"] },
-  { name:"リチウムイオン電池・モバイルバッテリー", cat:"リチウムイオン電池等（容器包装プラの日）", to:["plastic"], how:"中身の見える透明・半透明の袋に入れて、容器包装プラの日に別に出す。", kw:["リチウムイオン電池","りちうむいおんでんち","ばってりー","もばいるばってりー","じゅうでんち","リチウム電池","モバイルバッテリー","バッテリー","充電池"] },
+  /* びんの日 */
+  { name:"茶色のびん", cat:"空きびん（茶色）", to:["bottle"], how:"中身を空にして軽くすすぎ、茶色のびんへ。", kw:["茶びん","茶色びん","ビールびん","栄養ドリンク","ドリンク剤"] },
+  { name:"透明のびん", cat:"空きびん（無色）", to:["bottle"], how:"中身を空にして軽くすすぎ、無色のびんへ。", kw:["無色びん","透明びん","ジャムのびん","調味料のびん"] },
+  { name:"その他の色のびん", cat:"空きびん（その他の色）", to:["bottle"], how:"中身を空にして軽くすすぎ、その他の色のびんへ。", kw:["緑のびん","青いびん","色つきびん","黒いびん","ワインボトル","ワインのびん","一升瓶"] },
+  { name:"蛍光管", cat:"蛍光管", to:["bottle"], how:"買ったときの箱か新聞紙で包んで出す。", kw:["蛍光灯"] },
 
-  { name:"歯ブラシ", cat:"燃やさないごみ", to:["non"], how:"容器包装ではなくプラスチック製品そのものなので燃やさないごみ。", kw:["歯ブラシ","はぶらし","はぶらし"] },
-  { name:"ストロー", cat:"燃やさないごみ", to:["non"], how:"容器包装プラスチックの対象外。", kw:["ストロー","マドラー"] },
-  { name:"ハンガー", cat:"燃やさないごみ", to:["non"], how:"プラスチック製品そのものなので燃やさないごみ。", kw:["ハンガー"] },
-  { name:"CD・DVD", cat:"燃やさないごみ", to:["non"], how:"燃やさないごみの指定袋へ。", kw:["CD","しーでぃー","DVD","ブルーレイ","ディスク"] },
-  { name:"スプーン・フォーク", cat:"燃やさないごみ", to:["non"], how:"金属類として燃やさないごみ。", kw:["スプーン","フォーク"] },
-  { name:"フライパン・鍋", cat:"燃やさないごみ", to:["non"], how:"金属類として燃やさないごみ。", kw:["フライパン","なべ","ふらいぱん","鍋","なべ","やかん"] },
-  { name:"アルミホイル", cat:"燃やさないごみ", to:["non"], how:"金属類として燃やさないごみ。", kw:["アルミホイル","あるみほいる","ホイル"] },
-  { name:"乾電池", cat:"乾電池（燃やさないごみの日）", to:["non"], how:"指定袋に入れず、乾電池だけを透明の袋に入れて出す。", kw:["乾電池","でんち","かんでんち","ぼたんでんち","電池","単三電池","単四電池","単3","単4","ボタン電池"] },
-  { name:"ライター", cat:"ライター（燃やさないごみの日）", to:["non"], how:"ガスを抜いてから、ライターだけを透明の袋に入れて出す。指定袋には入れない。", kw:["ライター","らいたー","使い捨てライター"] },
+  /* 缶の日 */
+  { name:"空き缶", cat:"空き缶", to:["can"], how:"中身を空にして洗い、つぶさずに出す。", kw:["缶","アルミ缶","スチール缶","缶詰","ジュースの缶","ビールの缶","お菓子の缶"] },
+  { name:"スプレー缶・カセットボンベ", cat:"スプレー缶・カセットボンベ", to:["can"], how:"中身を使い切り、ガスを出し切ってから透明の袋にまとめて出す。", kw:["スプレー","カセットボンベ","ガスボンベ","ヘアスプレー","殺虫剤","制汗スプレー"] },
 
-  { name:"注射針", cat:"市では収集できません", to:[], how:"受け取った医療機関や薬局へ返してください。", kw:["注射針","ちゅうしゃばり","針","インスリン"] },
+  /* ステーションに出せないもの */
+  { name:"ふくらんだ・こわれた電池", cat:"環境パークで手渡し", place:"park", how:"発火のおそれがあるため、環境パーク事務所で職員に直接手渡す。回収BOXには入れない。", kw:["膨らんだ電池","膨張","壊れた電池","変形した電池","膨らんだバッテリー"] },
+  { name:"電池が外せない充電式の小物", cat:"環境パークで処分（有料）", place:"park", how:"電子タバコやワイヤレスイヤホンなど、電池を取り外せないものはステーションに出せない。環境パークで有料処分。", kw:["電子タバコ","加熱式たばこ","アイコス","ワイヤレスイヤホン","ブルートゥースイヤホン","イヤホン","電動歯ブラシ","電動シェーバー","ハンディファン","携帯扇風機","電池内蔵"] },
+  { name:"テレビ・洗濯機・エアコン・冷蔵庫", cat:"家電リサイクル4品目", place:"kaden", how:"買い替えなら買う店に、処分だけなら以前買った店に引き取りを頼む。郵便局でリサイクル券を買い、指定引取場所（(株)ファーストライン 0773-20-1930）へ自分で持ち込むこともできる。", kw:["テレビ","洗濯機","エアコン","冷蔵庫","液晶テレビ"] },
+  { name:"パソコン", cat:"パソコンの回収", place:"pc", how:"PCリサイクルマークがあればメーカーに回収を申し込む。市と協定のリネットジャパンの宅配回収も使える。処分前にデータを必ず消す。", kw:["PC","ノートパソコン","デスクトップ","タブレット"] },
+  { name:"大きな家具", cat:"粗大ごみ", place:"sodai", how:"指定袋に入らない大きなものは粗大ごみ。重さで料金が決まる（20kgまで1,540円）。申し込みは生活環境課へ。", kw:["ソファ","ソファー","タンス","たんす","ベッド","机","テーブル","本棚","棚","椅子","いす","カーペット","じゅうたん"] },
+  { name:"注射針", cat:"市では収集できません", place:"ret", how:"受け取った医療機関や薬局へ返す。", kw:["針","インスリン"] },
 ];
 
-const QUICK = ["お菓子の箱","電池","びん","歯ブラシ","ペットボトル","紙パック","スプレー缶","モバイルバッテリー"];
+const QUICK = ["電池","お菓子の箱","びん","歯ブラシ","紙パック","スプレー缶","ドライヤー","モバイルバッテリー"];
+
+/* 素材から考えるガイド（品目が見つからないとき用） */
+const MATERIALS = [
+  { id:"paper", name:"紙", rows:[
+    { to:"burn", t:"紙箱・紙袋・雑誌・新聞・ダンボール", d:"資源の紙類。燃やすごみの日に、指定袋に入れずひもでしばって" },
+    { to:"burn", t:"汚れた紙・ティッシュ・紙くず", d:"燃やすごみ（指定袋）" },
+    { to:"pet",  t:"牛乳パック", d:"洗って開いて、ペットボトル・びん・缶の日に" },
+  ]},
+  { id:"plastic", short:"容器包装プラ", name:"プラスチック", rows:[
+    { to:"plastic", t:"プラマークのある容器・袋・ふた", d:"中身を入れていた入れ物や包み。軽く洗って容器包装プラへ" },
+    { to:"non", t:"プラスチックの製品そのもの", d:"歯ブラシ・ハンガー・おもちゃ・文房具など" },
+    { to:"pet", t:"ペットボトル", d:"キャップとラベルは外して" },
+  ]},
+  { id:"metal", name:"金属", rows:[
+    { to:"can", t:"飲み物・食べ物の缶、スプレー缶", d:"空き缶の日。スプレー缶は使い切って透明袋で" },
+    { to:"non", t:"それ以外の金属製品", d:"鍋・フライパン・スプーン・アルミホイルなど" },
+  ]},
+  { id:"glass", name:"ガラス・びん", rows:[
+    { to:"bottle", t:"飲み物・食品のびん", d:"透明・茶色・その他の色に分けて" },
+    { to:"non", t:"乳白色のびん", d:"燃やさないごみ" },
+    { to:"bottle", t:"蛍光管", d:"箱か新聞紙で包んで" },
+  ]},
+  { id:"cloth", name:"布", rows:[
+    { to:"burn", t:"衣類・タオル", d:"燃やすごみの日に、指定袋に入れずに" },
+    { to:"burn", t:"下着・肌着・靴下", d:"燃やすごみ（指定袋）" },
+  ]},
+  { id:"battery", name:"電池・電気製品", rows:[
+    { to:"non", t:"乾電池", d:"燃やさないごみの日に、透明の袋で別に" },
+    { to:"plastic", t:"充電池・モバイルバッテリー・ボタン電池", d:"容器包装プラの日に、透明・半透明の袋で別に" },
+    { to:"non", t:"小さな電気製品", d:"電池を外して燃やさないごみの指定袋へ" },
+    { to:"park", t:"電池が外せないもの・ふくらんだ電池", d:"環境パークへ" },
+    { to:"kaden", t:"テレビ・洗濯機・エアコン・冷蔵庫", d:"家電リサイクル（市では収集しない）" },
+  ]},
+  { id:"big", name:"大きいもの", rows:[
+    { to:"sodai", t:"指定袋に入らない家具など", d:"粗大ごみ（有料・申し込み）" },
+  ]},
+];
+
+/* 区分から見る（グループ） */
+const GROUPS = [
+  { id:"burn", short:"燃やすごみ",    title:"燃やすごみの日に出すもの", alias:["燃やすごみ","もやすごみ","燃えるごみ","可燃","可燃ごみ","紙類","資源紙"] },
+  { id:"non", short:"燃やさないごみ",     title:"燃やさないごみの日に出すもの", alias:["燃やさないごみ","燃やさない","燃えないごみ","不燃","不燃ごみ"] },
+  { id:"plastic", short:"容器包装プラ", title:"容器包装プラの日に出すもの", alias:["容器包装プラスチック","容器包装","プラ","プラごみ","容器包装プラ"] },
+  { id:"pet", short:"ペットボトル",     title:"ペットボトルの日に出すもの", alias:["ペットボトルの日"] },
+  { id:"bottle", short:"びん・蛍光管",  title:"びん・蛍光管の日に出すもの", alias:["びんの日","空きびん","瓶"] },
+  { id:"can", short:"缶・スプレー缶",     title:"缶の日に出すもの", alias:["缶の日"] },
+  { id:"out", short:"出せないもの",     title:"ごみステーションに出せないもの", alias:["出せない","粗大","粗大ごみ","持ち込み","環境パーク"] },
+];
+
+/* 漢字の品目をひらがなでも探せるように（読み） */
+const YOMI = {
+  "生ごみ":["なまごみ"], "紙くず・汚れた紙":["かみくず"], "下着・肌着・靴下":["したぎ","はだぎ"],
+  "お菓子の箱":["おかしのはこ","はこ"], "雑誌・雑紙・紙袋":["ざっし","ざつがみ","かみぶくろ","きょうかしょ","ふうとう"],
+  "新聞紙・チラシ":["しんぶん","しんぶんし"], "衣類":["いるい","ふく","ようふく","ふるぎ"],
+  "歯ブラシ":["はぶらし"], "フライパン・鍋":["なべ"], "乳白色のびん":["にゅうはくしょく"],
+  "乾電池":["でんち","かんでんち","たんさん","たんよん"], "小型家電":["こがたかでん","かでん","とけい","でんたく"],
+  "食品トレー":["とれー"], "弁当・食品の容器":["べんとう","たまごぱっく","なっとう"],
+  "シャンプー・洗剤のボトル":["せんざい"], "充電式電池・モバイルバッテリー":["じゅうでんち","りちうむいおんでんち","じゅうでんしきでんち"],
+  "ボタン電池・コイン電池":["ぼたんでんち","こいんでんち"], "紙パック":["ぎゅうにゅうぱっく","かみぱっく"],
+  "茶色のびん":["ちゃいろのびん","ちゃびん"], "透明のびん":["とうめいのびん"], "その他の色のびん":["みどりのびん","いっしょうびん"],
+  "蛍光管":["けいこうかん","けいこうとう"], "空き缶":["あきかん","かん","かんづめ"], "スプレー缶・カセットボンベ":["すぷれーかん"],
+  "ふくらんだ・こわれた電池":["ふくらんだでんち","こわれたでんち"], "電池が外せない充電式の小物":["でんしたばこ"],
+  "テレビ・洗濯機・エアコン・冷蔵庫":["せんたくき","れいぞうこ"], "パソコン":["ぱそこん"],
+  "大きな家具":["かぐ","つくえ","ほんだな","たんす","べっど"], "注射針":["ちゅうしゃばり"],
+};
 
 /* ============================================================
    日付まわり
@@ -428,7 +555,7 @@ function relLabel(d, today){
   if(n===2) return "あさって";
   return `あと${n}日`;
 }
-const stamp = (k, extra="") => `<span class="stamp ${extra}" data-k="${k}" aria-hidden="true">${COL[k] ? COL[k].mark : "休"}</span>`;
+const stamp = (k, extra="") => `<span class="stamp ${extra}" data-k="${k}" aria-hidden="true">${COL[k] ? COL[k].mark : PLACES[k] ? PLACES[k].mark : "休"}</span>`;
 
 /* ============================================================
    いちばん上：今日 / 明日
@@ -506,72 +633,178 @@ function renderNext(now){
 }
 
 /* ============================================================
-   検索
+   検索「これは何ごみ？」
    ============================================================ */
 function norm(t){
   return (t||"").normalize("NFKC").toLowerCase()
     .replace(/[ァ-ヶ]/g, ch => String.fromCharCode(ch.charCodeAt(0)-0x60)) // カタカナ→ひらがな
-    .replace(/[\s・･、。,.()（）「」]/g,"")
+    .replace(/[\s・･、。,.()（）「」ー〜~-]/g,"")
     .replace(/瓶/g,"びん");
 }
-const INDEX = ITEMS.map(it => ({ it, kws: [it.name, ...it.kw].map(norm) }));
+function bigrams(s){ const b=new Set(); for(let i=0;i<s.length-1;i++) b.add(s.slice(i,i+2)); return b; }
+function dice(a,b){
+  if(a.length<2||b.length<2) return 0;
+  const A=bigrams(a), B=bigrams(b); let n=0;
+  for(const x of A) if(B.has(x)) n++;
+  return 2*n/(A.size+B.size);
+}
+const INDEX = ITEMS.map(it => ({ it, kws: [...new Set([it.name, ...it.kw, ...(YOMI[it.name]||[])].map(norm))].filter(Boolean) }));
+const itemGroup = it => it.place ? "out" : it.to[0];
+const GROUP_ALIAS = new Map();
+GROUPS.forEach(g => g.alias.forEach(a => GROUP_ALIAS.set(norm(a), g.id)));
+const MAT_ALIAS = new Map([
+  ["紙","paper"],["かみ","paper"],["プラスチック","plastic"],["ぷらすちっく","plastic"],["金属","metal"],["きんぞく","metal"],["鉄","metal"],
+  ["ガラス","glass"],["がらす","glass"],["陶器","glass"],["布","cloth"],["ぬの","cloth"],["電気製品","battery"],["電化製品","battery"],
+].map(([a,b]) => [norm(a),b]));
 
 function search(q){
   const qn = norm(q);
   if(!qn) return [];
-  const scored = [];
+  const out = [];
   for(const {it,kws} of INDEX){
     let s = 0;
     for(const k of kws){
-      if(!k) continue;
       if(k===qn) s = Math.max(s, 1000);
-      else if(k.startsWith(qn)) s = Math.max(s, 600 - k.length);
-      else if(k.includes(qn)) s = Math.max(s, 400 - k.length);
-      else if(qn.includes(k) && k.length>=1) s = Math.max(s, 200 + k.length*10);
+      else if(k.startsWith(qn)) s = Math.max(s, 700 - (k.length-qn.length));
+      else if(k.includes(qn)) s = Math.max(s, 500 - (k.length-qn.length));
+      else {
+        // 入力の中にキーワードが入っている（例：「じゃがりこの箱」に「箱」）
+        const kanji = /[一-鿿]/.test(k);
+        if(qn.includes(k) && (kanji || (k.length>=2 && (k.length*2>=qn.length || qn.endsWith(k))))) s = Math.max(s, 300 + k.length*10);
+        // 打ちまちがい・言い方のゆれ（例：「ペトボトル」）
+        if(qn.length>=3){ const d = dice(qn,k); if(d>=0.5) s = Math.max(s, Math.round(200 + d*300*Math.sqrt(Math.min(qn.length,k.length)/Math.max(qn.length,k.length)))); }
+      }
     }
-    if(s>0) scored.push({it,s});
+    if(s>0) out.push({it,s});
   }
-  scored.sort((a,b)=>b.s-a.s);
-  return scored.slice(0,4).map(x=>x.it);
+  return out.sort((a,b)=>b.s-a.s).map(x=>x.it);
+}
+
+let sState = { mode:"home" };
+
+function fromDay(now){
+  const today = startOfDay(now);
+  const before = now.getHours()*60+now.getMinutes() < CUTOFF.h*60+CUTOFF.m;
+  return before ? today : addDays(today,1);
 }
 
 function resultCard(it, now){
   const today = startOfDay(now);
-  const beforeCutoff = now.getHours()*60+now.getMinutes() < CUTOFF.h*60+CUTOFF.m;
-  const from = beforeCutoff ? today : addDays(today,1);
-  const opts = it.to.map(k => ({k, d: nextDate(k, from)})).filter(x=>x.d).sort((a,b)=>a.d-b.d);
-  const first = opts[0];
-  const kAttr = first ? `data-k="${first.k}"` : "";
-  let day;
-  if(!it.to.length){
-    day = `<p class="day">ごみステーションには出せません</p>`;
-  } else {
-    day = `<p class="day">${stamp(first.k)}<span><b>次は ${fmt(first.d)}</b>（${relLabel(first.d,today)}）</span><span>${opts.map(o=>COL[o.k].rule).join(" ／ ")}</span></p>`;
+  if(it.place){
+    const p = PLACES[it.place];
+    return `<article class="res" data-k="${it.place}">
+      <h3>${it.name}</h3>
+      <p class="cat">${it.cat}</p>
+      <p class="day">${stamp(it.place)}<span><b>ごみステーションには出せません</b></span></p>
+      <p class="how">${p.lead ? p.lead+" " : ""}${it.how}</p>
+      ${p.contact ? `<p class="contact">わからないときは 生活環境課・環境パーク <a href="tel:0773221827">0773-22-1827</a></p>` : ""}
+    </article>`;
   }
-  return `<article class="res" ${kAttr}>
+  const opts = it.to.map(k => ({k, d: nextDate(k, fromDay(now))})).filter(x=>x.d).sort((a,b)=>a.d-b.d);
+  const first = opts[0];
+  return `<article class="res" data-k="${first ? first.k : it.to[0]}">
     <h3>${it.name}</h3>
     <p class="cat">${it.cat}</p>
-    ${day}
+    ${first ? `<p class="day">${stamp(first.k)}<span><b>次は ${fmt(first.d)}</b>（${relLabel(first.d,today)}）</span><span class="rule">${opts.map(o=>COL[o.k].rule).join(" ／ ")}</span></p>` : ""}
     <p class="how">${it.how}</p>
   </article>`;
 }
 
-function hintFor(q){
-  const qn = norm(q);
-  if(qn.includes("はこ") || qn.includes("箱")){
-    return `<div class="hint"><p>箱は素材で分けます。</p><ul><li>紙の箱 → 紙類（燃やすごみの日に、指定袋に入れずに）</li><li>プラスチックのふたやフィルム → 外して容器包装プラへ</li></ul></div>`;
-  }
-  return `<div class="hint"><p>「${escapeHTML(q)}」は見つかりませんでした。</p><ul><li>「箱」「びん」「袋」「電池」など、短いことばで試してください。</li><li>それでもわからないときは 福知山市環境パーク <a href="tel:0773221827">0773-22-1827</a> へ。</li></ul></div>`;
+const chip = (label, attr) => `<button type="button" class="chip" ${attr}>${escapeHTML(label)}</button>`;
+const matChips = () => `<div class="chips wrap">${MATERIALS.map(m => chip(m.name, `data-mat="${m.id}"`)).join("")}</div>`;
+
+function viewHome(now){
+  const counts = {};
+  ITEMS.forEach(it => { const g = itemGroup(it); counts[g] = (counts[g]||0)+1; });
+  return `
+    <div class="chips">${QUICK.map(t => chip(t, `data-q="${escapeHTML(t)}"`)).join("")}</div>
+    <h3 class="sub">出す日から見る</h3>
+    <div class="groups">${GROUPS.map(g => {
+      const k = g.id==="out" ? "park" : g.id;
+      const d = g.id==="out" ? null : nextDate(g.id, fromDay(now));
+      const name = g.short;
+      const meta = g.id==="out" ? "粗大ごみ・家電など" : `次は ${fmt(d)}`;
+      return `<button type="button" class="gbtn" data-group="${g.id}" data-k="${k}">${stamp(k)}<span>${name}<small>${meta}</small></span></button>`;
+    }).join("")}</div>
+    <h3 class="sub">見つからないものは、素材から考える</h3>
+    ${matChips()}`;
 }
-function escapeHTML(s){ return s.replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+
+function viewGroup(id, now){
+  const g = GROUPS.find(x=>x.id===id);
+  const items = ITEMS.filter(it => itemGroup(it)===id || (id!=="out" && !it.place && it.to.includes(id)));
+  const k = id==="out" ? "park" : id;
+  const d = id==="out" ? null : nextDate(id, fromDay(now));
+  return `
+    <div class="ghead" data-k="${k}">
+      <button type="button" class="back" data-home>‹ もどる</button>
+    </div>
+    <div class="gtitle" data-k="${k}">${stamp(k)}<div><h3>${g.title}</h3>${d ? `<p>${COL[id].rule}　次は ${fmt(d)}（${relLabel(d,startOfDay(now))}）</p>` : `<p>それぞれ出し方がちがいます</p>`}</div></div>
+    ${id!=="out" ? `<p class="gtip">${COL[id].tip}</p>` : ""}
+    <div class="list">${items.map(it => `<button type="button" class="lrow" data-q="${escapeHTML(it.name)}"><span>${it.name}</span>${it.cat!==(COL[id]&&COL[id].name) ? `<small>${it.cat}</small>` : ""}</button>`).join("")}</div>`;
+}
+
+function viewMaterial(id, now){
+  const m = MATERIALS.find(x=>x.id===id);
+  const today = startOfDay(now);
+  return `
+    <div class="ghead"><button type="button" class="back" data-home>‹ もどる</button></div>
+    ${guideCard(m, today, now)}
+    <p class="sub">ほかの素材</p>
+    <div class="chips wrap">${MATERIALS.filter(x=>x.id!==id).map(x => chip(x.name, `data-mat="${x.id}"`)).join("")}</div>`;
+}
+
+function guideCard(m, today, now){
+  return `<div class="guide">
+    <h3>${m.name}でできているもの</h3>
+    ${m.rows.map(r => {
+      const d = COL[r.to] ? nextDate(r.to, fromDay(now)) : null;
+      const where = COL[r.to] ? `${COL[r.to].name}${d ? `・次は ${fmt(d)}` : ""}` : "";
+      return `<div class="g" data-k="${r.to}">${stamp(r.to)}<div><b>${r.t}</b><p>${r.d}</p>${where ? `<small>${where}</small>` : ""}</div></div>`;
+    }).join("")}
+    <p class="contact">それでも迷ったら 環境パーク <a href="tel:0773221827">0773-22-1827</a></p>
+  </div>`;
+}
+
+function viewQuery(q, now){
+  const qn = norm(q);
+  const today = startOfDay(now);
+  const hits = search(q);
+  let html = "";
+  const gid = GROUP_ALIAS.get(qn);
+  const mid = MAT_ALIAS.get(qn);
+  if(mid) html += guideCard(MATERIALS.find(x=>x.id===mid), today, now);
+  if(gid && !hits.some(h => norm(h.name)===qn)){
+    const g = GROUPS.find(x=>x.id===gid);
+    html += `<button type="button" class="lrow strong" data-group="${gid}"><span>${g.title}を一覧で見る</span><small>›</small></button>`;
+  }
+  if(hits.length){
+    html += hits.slice(0,3).map(it => resultCard(it, now)).join("");
+    const rest = hits.slice(3,9);
+    if(rest.length) html += `<p class="sub">ほかの候補</p><div class="chips wrap">${rest.map(it => chip(it.name, `data-q="${escapeHTML(it.name)}"`)).join("")}</div>`;
+  } else if(!mid && !gid){
+    html += `<div class="hint"><p>「${escapeHTML(q)}」は登録がありませんでした。短いことば（「箱」「袋」「電池」など）でも試してみてください。</p><p>何でできているかで、だいたいの出し方がわかります。</p></div>${matChips()}`;
+  }
+  return html;
+}
+
+function escapeHTML(s){ return String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
 
 function runSearch(){
   const q = document.getElementById("q").value.trim();
-  const box = document.getElementById("results");
-  if(!q){ box.innerHTML = ""; return; }
-  const hits = search(q);
+  if(q) sState = { mode:"query", q };
+  else if(sState.mode==="query") sState = { mode:"home" };
+  renderSearch();
+}
+function renderSearch(){
   const now = new Date();
-  box.innerHTML = hits.length ? hits.map(it => resultCard(it, now)).join("") : hintFor(q);
+  const box = document.getElementById("sBody");
+  const s = sState;
+  box.innerHTML =
+    s.mode==="query" ? viewQuery(s.q, now) :
+    s.mode==="group" ? viewGroup(s.id, now) :
+    s.mode==="mat"   ? viewMaterial(s.id, now) :
+    viewHome(now);
 }
 
 /* ============================================================
@@ -653,16 +886,22 @@ function renderAll(){
   renderNotice(now);
   renderNext(now);
   renderCalendar();
-  runSearch();
+  renderSearch();
 }
 
-document.getElementById("chips").innerHTML = QUICK.map(t=>`<button type="button" class="chip">${t}</button>`).join("");
-document.getElementById("chips").addEventListener("click", e => {
-  const b = e.target.closest(".chip"); if(!b) return;
-  const q = document.getElementById("q"); q.value = b.textContent; runSearch();
-});
 document.getElementById("q").addEventListener("input", runSearch);
 document.getElementById("q").addEventListener("keydown", e => { if(e.key==="Enter"){ e.target.blur(); } });
+document.getElementById("sBody").addEventListener("click", e => {
+  const b = e.target.closest("button"); if(!b) return;
+  const q = document.getElementById("q");
+  if(b.dataset.q!==undefined){ q.value = b.dataset.q; runSearch(); }
+  else if(b.dataset.group){ sState = { mode:"group", id:b.dataset.group }; q.value=""; renderSearch(); }
+  else if(b.dataset.mat){ sState = { mode:"mat", id:b.dataset.mat }; q.value=""; renderSearch(); }
+  else if(b.hasAttribute("data-home")){ sState = { mode:"home" }; q.value=""; renderSearch(); }
+  else return;
+  const top = document.getElementById("search").getBoundingClientRect().top;
+  if(top < 0) document.getElementById("search").scrollIntoView();
+});
 
 document.getElementById("prevM").addEventListener("click", () => { viewMonth = new Date(viewMonth.getFullYear(), viewMonth.getMonth()-1, 1); renderCalendar(); });
 document.getElementById("nextM").addEventListener("click", () => { viewMonth = new Date(viewMonth.getFullYear(), viewMonth.getMonth()+1, 1); renderCalendar(); });
