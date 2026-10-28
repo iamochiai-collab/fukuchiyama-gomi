@@ -1,6 +1,6 @@
 // オフラインでも開けるようにするための Service Worker
 // ページを更新したら VERSION を変えると、古いキャッシュが入れ替わります。
-const VERSION = "gomi-v3-2026-10";
+const VERSION = "gomi-v4-2026-10";
 const CORE = [
   "./",
   "./index.html",

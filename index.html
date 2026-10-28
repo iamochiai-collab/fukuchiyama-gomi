@@ -264,16 +264,6 @@ footer p{margin:0 0 6px}
     <div id="hero" class="hero" aria-live="polite"></div>
     <div id="fyNotice" class="notice" hidden></div>
 
-    <section id="search" aria-labelledby="search-h">
-      <h2 id="search-h">これは何ごみ？</h2>
-      <div class="searchbox">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M20 20l-4.6-4.6"/></svg>
-        <label for="q" class="sr">品目名で検索</label>
-        <input id="q" type="search" enterkeyhint="search" autocomplete="off" placeholder="例：電池、お菓子の箱、ドライヤー">
-      </div>
-      <div id="sBody" aria-live="polite"></div>
-    </section>
-
     <section id="next" aria-labelledby="next-h">
       <h2 id="next-h">次の収集日</h2>
       <ul class="next panel" id="nextList"></ul>
@@ -309,6 +299,16 @@ footer p{margin:0 0 6px}
         </ul>
       </div>
     </section>
+
+    <section id="search" aria-labelledby="search-h">
+      <h2 id="search-h">これは何ごみ？</h2>
+      <div class="searchbox">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M20 20l-4.6-4.6"/></svg>
+        <label for="q" class="sr">品目名で検索</label>
+        <input id="q" type="search" enterkeyhint="search" autocomplete="off" placeholder="例：電池、お菓子の箱、ドライヤー">
+      </div>
+      <div id="sBody" aria-live="polite"></div>
+    </section>
   </main>
 
   <footer>
@@ -321,8 +321,8 @@ footer p{margin:0 0 6px}
 
 <nav class="tabbar" aria-label="ページ内の移動">
   <a href="#top"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11l8-7 8 7v9H4z"/><path d="M10 20v-6h4v6"/></svg>今日</a>
-  <a href="#search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M20 20l-4.6-4.6"/></svg>さがす</a>
   <a href="#calendar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/></svg>カレンダー</a>
+  <a href="#search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M20 20l-4.6-4.6"/></svg>さがす</a>
 </nav>
 
 <script>
